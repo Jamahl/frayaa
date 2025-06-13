@@ -1,0 +1,13 @@
+Django==4.2.23
+djangorestframework==3.16.0
+django-cors-headers==4.7.0
+python-decouple==3.8
+psycopg2-binary==2.9.9
+google-auth==2.29.0
+google-auth-oauthlib==1.2.0
+google-auth-httplib2==0.2.0
+google-api-python-client==2.131.0
+openai==1.35.3
+crewai==0.36.0
+celery==5.3.4
+redis==5.0.1
