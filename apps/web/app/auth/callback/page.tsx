@@ -12,6 +12,8 @@ export default function AuthCallback() {
     const handleAuthCallback = async () => {
       try {
         const { data, error } = await supabase.auth.getSession();
+        console.log('[AuthCallback] window.location:', window.location.href);
+        console.log('[AuthCallback] getSession() result:', data, error);
 
         if (error) {
           console.error('Auth callback error:', error);
@@ -19,38 +21,13 @@ export default function AuthCallback() {
           return;
         }
 
-        // Add a short delay for smoother UX (optional, can remove if not desired)
         await new Promise((resolve) => setTimeout(resolve, 400));
 
         if (data.session && data.session.user) {
-          // Valid session and user present, sync Google tokens with Django backend
-          try {
-            const syncRes = await fetch(
-              process.env.NEXT_PUBLIC_API_URL
-                ? `${process.env.NEXT_PUBLIC_API_URL}/google-tokens/`
-                : 'http://localhost:8000/google-tokens/',
-              {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include', // For cookie/session if needed
-                body: JSON.stringify({ supabase_user_id: data.session.user.id }),
-              }
-            );
-            const syncJson = await syncRes.json();
-            if (!syncRes.ok || !syncJson.success) {
-              console.error('Failed to sync Google tokens:', syncJson.error || syncJson);
-              router.replace('/login?error=token_sync_failed');
-              return;
-            }
-            // Success: redirect to dashboard
-            router.replace('/dashboard');
-          } catch (err) {
-            console.error('Unexpected error syncing tokens:', err);
-            router.replace('/login?error=token_sync_unexpected');
-            return;
-          }
+          console.log('[AuthCallback] Session and user found, redirecting to /dashboard:', data.session.user);
+          router.replace('/dashboard');
         } else {
-          // No session/user, redirect to login
+          console.warn('[AuthCallback] No session or user found after auth, redirecting to /login', { session: data.session });
           router.replace('/login');
         }
       } catch (error) {
@@ -71,4 +48,3 @@ export default function AuthCallback() {
     </div>
   );
 }
-

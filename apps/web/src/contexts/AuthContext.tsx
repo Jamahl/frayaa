@@ -40,6 +40,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // If user signs in, create/update user record in our database
         if (event === 'SIGNED_IN' && session?.user) {
           await createOrUpdateUser(session.user)
+          
+          // If we have a refresh token, store it in Supabase users table
+          if (session.provider_refresh_token) {
+            try {
+              const { error } = await supabase
+                .from('users')
+                .update({
+                  google_refresh_token: session.provider_refresh_token,
+                  google_token_expiry: session.provider_token ? new Date(Date.now() + 3600 * 1000).toISOString() : null
+                })
+                .eq('id', session.user.id)
+
+              if (error) {
+                console.error('Failed to store Google refresh token:', error)
+              } else {
+                console.log('Successfully stored Google refresh token in Supabase')
+              }
+            } catch (error) {
+              console.error('Error storing Google refresh token:', error)
+            }
+          }
         }
       }
     )
@@ -54,11 +75,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .upsert({
           id: user.id,
           email: user.email,
-          created_at: new Date().toISOString()
+        }, {
+          onConflict: 'id',
+          ignoreDuplicates: false
         })
 
       if (error) {
         console.error('Error creating/updating user:', error)
+      } else {
+        console.log('Successfully created/updated user')
       }
     } catch (error) {
       console.error('Error in createOrUpdateUser:', error)
@@ -71,6 +96,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         provider: 'google',
         options: {
           scopes: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/calendar',
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
           redirectTo: `${window.location.origin}/auth/callback`
         }
       })

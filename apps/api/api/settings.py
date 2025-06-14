@@ -11,9 +11,19 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
-import dj_database_url
+from decouple import AutoConfig
 import os
+import dj_database_url
+
+# Force decouple to load from the backend's .env
+config = AutoConfig(search_path='/Users/jam/CascadeProjects/frayav5/apps/api')
+
+SUPABASE_URL = config('SUPABASE_URL')
+SUPABASE_SERVICE_ROLE_KEY = config('SUPABASE_SERVICE_ROLE_KEY')
+
+# Google OAuth2 settings
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID', default='')
+GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET', default='')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +50,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Local apps
+    'emails',
     
     # Third party apps
     'rest_framework',
@@ -86,7 +99,7 @@ WSGI_APPLICATION = 'api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASE_URL = config('DATABASE_URL', default='sqlite:///db.sqlite3')
+DATABASE_URL = 'postgresql://postgres.lpwgxnocoxlthyqvadyv:hysteria@aws-0-us-east-2.pooler.supabase.com:5432/postgres'
 
 DATABASES = {
     'default': dj_database_url.parse(DATABASE_URL)
