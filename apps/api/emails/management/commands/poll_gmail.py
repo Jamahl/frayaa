@@ -140,33 +140,24 @@ class Command(BaseCommand):
 
             body = extract_body(msg.get('payload', {}))
 
-            # Print required metadata
-            print("\n--- New Email ---")
-            print(f"From: {headers.get('from', '')}")
-            print(f"To: {headers.get('to', '')}")
-            print(f"Time: {headers.get('date', '')}")
-            print(f"Subject: {headers.get('subject', '(No Subject)')}")
-            print(f"Thread ID: {msg.get('threadId', '')}")
-            print(f"Body:\n{body[:500]}{'...' if body and len(body) > 500 else ''}")
-            print("---------------\n")
-
-            # Prepare email data for storage
-            email_data = {
+            import json
+            # Prepare email data for CrewAI agent consumption
+            email_for_agent = {
                 'user_id': user_id,
-                'gmail_message_id': msg_id,
                 'thread_id': msg.get('threadId'),
+                'message_id': msg_id,
                 'from_email': headers.get('from', ''),
                 'to_email': headers.get('to', ''),
-                'subject': headers.get('subject', '(No Subject)'),
                 'received_at': self.parse_email_date(headers.get('date')),
+                'subject': headers.get('subject', '(No Subject)'),
+                'body': body,
                 'snippet': msg.get('snippet', ''),
                 'is_read': 'UNREAD' not in msg.get('labelIds', []),
                 'labels': msg.get('labelIds', []),
                 'raw_headers': headers
             }
-
-            # Store in Supabase
-            self.store_email(email_data)
+            print("\n[AGENT EMAIL JSON]\n" + json.dumps(email_for_agent, indent=2, ensure_ascii=False) + "\n")
+            # Do not store this in DB, just output for agent workflow
 
         except Exception as e:
             logger.error(f"Error processing message {msg_id}: {str(e)}")
