@@ -29,6 +29,7 @@ class UserPreferencesView(APIView):
         if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
             return Response({'error': 'Supabase env vars not set'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+        # Try update first
         update = supabase.table('public.preferences').update({
             'preferred_days': data.get('preferred_days'),
             'preferred_times': data.get('preferred_times'),
@@ -37,4 +38,15 @@ class UserPreferencesView(APIView):
         }).eq('user_id', user_id).execute()
         if getattr(update, 'error', None):
             return Response({'error': str(update.error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # If no rows updated, insert instead
+        if not update.data or (isinstance(update.data, list) and len(update.data) == 0):
+            insert = supabase.table('public.preferences').insert({
+                'user_id': user_id,
+                'preferred_days': data.get('preferred_days'),
+                'preferred_times': data.get('preferred_times'),
+                'buffer_minutes': data.get('buffer_minutes'),
+                'custom_ea_prompt': data.get('custom_ea_prompt'),
+            }).execute()
+            if getattr(insert, 'error', None):
+                return Response({'error': str(insert.error)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response({'success': True})
