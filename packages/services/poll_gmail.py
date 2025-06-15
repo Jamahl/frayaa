@@ -128,11 +128,12 @@ def main():
     Polls for new/unread emails every 30 seconds, processes each with CrewAI, and marks them as read.
     Usage: python poll_gmail.py <user_id>
     """
-    import importlib
     import os
+    import sys
     sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
     sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../agents')))
-    test_email_workflow = importlib.import_module('agents.test_email_workflow')
+    from agents.crew_workflow import process_email
+
     if len(sys.argv) != 2:
         print("Usage: python poll_gmail.py <user_id>")
         sys.exit(1)
@@ -144,14 +145,16 @@ def main():
             for msg in messages:
                 meta = extract_metadata(msg)
                 print_message(meta)
-                # Call CrewAI pipeline with this email (simulate by passing as example_email)
                 print("[CrewAI] Processing email with agents...")
                 try:
-                    # Use the workflow pipeline, passing meta as the input email
-                    test_email_workflow.main(example_email=meta)
+                    result = process_email(meta)
+                    # Only print/process if intent is meeting-related
+                    if isinstance(result, dict) and result.get('intent', '').lower() not in ['schedule', 'reschedule', 'cancel']:
+                        print("[CrewAI] Ignored non-meeting intent email.")
+                    else:
+                        print("[CrewAI] Meeting intent detected. Output:", result)
                 except Exception as agent_err:
                     print(f"Error running CrewAI workflow: {agent_err}")
-
             print("--- Waiting 30 seconds before next poll ---\n")
         except Exception as e:
             print(f"Error polling Gmail: {e}")
