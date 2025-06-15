@@ -114,13 +114,13 @@ class EmailAnalyzerAgent(Agent):
             verbose=False
         )
         crew.kickoff()
-        print('[DEBUG] Raw Output:', task.output.raw)
+        print('[DEBUG] Result Output:', task.output.result)
         print('[DEBUG] JSON Output:', task.output.json_dict)
         if task.output.json_dict:
             return task.output.json_dict
         try:
             import json
-            return json.loads(task.output.raw)
+            return json.loads(task.output.result)
         except Exception as e:
-            print('[DEBUG] Failed to parse raw output as JSON:', e)
-            return task.output.raw
+            print('[DEBUG] Failed to parse result output as JSON:', e)
+            return task.output.result

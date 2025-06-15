@@ -16,7 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from api.google_tokens import GoogleTokensView
+from api.preferences import UserPreferencesView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/google-tokens/<str:user_id>/', GoogleTokensView.as_view()),
+    path('api/user/preferences/<str:user_id>/', UserPreferencesView.as_view()),
 ]

@@ -41,24 +41,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (event === 'SIGNED_IN' && session?.user) {
           await createOrUpdateUser(session.user)
           
-          // If we have a refresh token, store it in Supabase users table
-          if (session.provider_refresh_token) {
+          // Store Google OAuth tokens in Supabase users table if present
+          if (session.provider_refresh_token || session.provider_token) {
             try {
+              const updateFields: Record<string, any> = {};
+              if (session.provider_refresh_token) {
+                updateFields.google_refresh_token = session.provider_refresh_token;
+              }
+              if (session.provider_token) {
+                updateFields.google_access_token = session.provider_token;
+                // Optionally, set expiry if available (here, just 1 hour from now)
+                updateFields.google_token_expiry = new Date(Date.now() + 3600 * 1000).toISOString();
+              }
               const { error } = await supabase
                 .from('users')
-                .update({
-                  google_refresh_token: session.provider_refresh_token,
-                  google_token_expiry: session.provider_token ? new Date(Date.now() + 3600 * 1000).toISOString() : null
-                })
+                .update(updateFields)
                 .eq('id', session.user.id)
 
               if (error) {
-                console.error('Failed to store Google refresh token:', error)
+                console.error('Failed to store Google tokens:', error)
               } else {
-                console.log('Successfully stored Google refresh token in Supabase')
+                console.log('Successfully stored Google tokens in Supabase:', updateFields)
               }
             } catch (error) {
-              console.error('Error storing Google refresh token:', error)
+              console.error('Error storing Google tokens:', error)
             }
           }
         }

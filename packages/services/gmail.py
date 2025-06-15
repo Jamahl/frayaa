@@ -1,7 +1,7 @@
 import os
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from api.google_refresh_token import get_user_google_refresh_token
+import requests
 
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
@@ -13,13 +13,12 @@ def list_unread_emails(user_id):
     Only to be called from backend/internal services. Never expose tokens or results to client directly.
     Returns a list of unread message metadata (IDs, etc.).
     """
-    refresh_token = get_user_google_refresh_token(user_id)
-    if not refresh_token:
-        raise ValueError(f"No Google refresh token found for user: {user_id}")
-    
+    resp = requests.get(f"http://localhost:8000/api/google-tokens/{user_id}/")
+    resp.raise_for_status()
+    tokens = resp.json()
     creds = Credentials(
-        token=None,  # Will be refreshed automatically
-        refresh_token=refresh_token,
+        tokens['google_access_token'],
+        refresh_token=tokens['google_refresh_token'],
         token_uri='https://oauth2.googleapis.com/token',
         client_id=GOOGLE_CLIENT_ID,
         client_secret=GOOGLE_CLIENT_SECRET,

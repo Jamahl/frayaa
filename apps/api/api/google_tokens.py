@@ -9,6 +9,8 @@ SUPABASE_URL = getattr(settings, 'SUPABASE_URL', None)
 SUPABASE_SERVICE_ROLE_KEY = getattr(settings, 'SUPABASE_SERVICE_ROLE_KEY', None)
 
 
+import traceback
+
 def get_google_tokens_for_user(user_id: str):
     """
     Secure backend utility to retrieve Google OAuth tokens for a given user_id.
@@ -18,18 +20,36 @@ def get_google_tokens_for_user(user_id: str):
     if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
         raise Exception('Supabase env vars not set')
     supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
-    result = supabase.table('public.users').select(
+    result = supabase.table('users').select(
         'google_access_token, google_refresh_token, google_token_expiry'
     ).eq('id', user_id).single().execute()
     if getattr(result, 'error', None):
         raise Exception(result.error)
     if not result.data:
         raise Exception('User not found or missing tokens')
+    if not result.data.get('google_access_token') or not result.data.get('google_refresh_token'):
+        raise Exception('Google tokens missing for user')
     return {
         'google_access_token': result.data.get('google_access_token'),
         'google_refresh_token': result.data.get('google_refresh_token'),
         'google_token_expiry': result.data.get('google_token_expiry'),
     }
+
+# In the APIView, print traceback and return clear error
+from rest_framework.permissions import AllowAny
+
+class GoogleTokensView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request, user_id):
+        try:
+            tokens = get_google_tokens_for_user(user_id)
+            return Response(tokens)
+        except Exception as e:
+            import traceback
+            print(f"[GoogleTokensView] Error for user_id={user_id}: {e}")
+            print(traceback.format_exc())
+            return Response({'error': str(e)}, status=404)
+
 
 from rest_framework.permissions import AllowAny
 
@@ -85,7 +105,7 @@ class StoreGoogleTokensView(APIView):
                 return Response({'error': 'Missing Google tokens'}, status=status.HTTP_400_BAD_REQUEST)
             # Update public.users
             logger.info(f"Updating users table for user: {user_id}")
-            update = supabase.table('public.users').update({
+            update = supabase.table('users').update({
                 'google_access_token': access_token,
                 'google_refresh_token': refresh_token,
                 'google_token_expiry': expires_at * 1000  # store as ms since epoch or convert as needed
