@@ -12,6 +12,12 @@ This file exposes process_email(email_json) as the main entry point for polling 
 from crewai import Agent, Task, Crew
 from .agent_prompts import EMAIL_ANALYZER_PROMPT, REPLY_AGENT_PROMPT, REPLY_TEMPLATE
 from .send_email_tool import SendEmailTool
+from .calendar_tools import (
+    SearchCalendarEventsTool,
+    CreateCalendarEventTool,
+    UpdateCalendarEventTool,
+    CancelCalendarEventTool
+)
 import logging
 
 VERBOSE = True  # Toggle verbose debug output here
@@ -19,7 +25,7 @@ VERBOSE = True  # Toggle verbose debug output here
 def process_email(email_json, creds=None):
     """
     Process a single email JSON object through the CrewAI pipeline.
-    creds: Gmail API credentials for sending replies (required)
+    creds: Gmail API credentials for sending replies and calendar actions (required)
     """
     preferences = {
         "name": email_json.get("to", ""),
@@ -31,7 +37,11 @@ def process_email(email_json, creds=None):
     }
     # Define CrewAI tools
     send_email_tool = SendEmailTool(creds)
-    tools = [send_email_tool]
+    search_calendar_tool = SearchCalendarEventsTool(creds)
+    create_calendar_tool = CreateCalendarEventTool(creds)
+    update_calendar_tool = UpdateCalendarEventTool(creds)
+    cancel_calendar_tool = CancelCalendarEventTool(creds)
+    tools = [send_email_tool, search_calendar_tool, create_calendar_tool, update_calendar_tool, cancel_calendar_tool]
 
     # Define CrewAI agents
     analyzer_agent = Agent(
@@ -43,7 +53,7 @@ def process_email(email_json, creds=None):
     )
     reply_agent = Agent(
         role="Reply Agent - you are a professional Executive Assistant.",
-        goal="For meeting-related intents (schedule, reschedule, cancel), send the reply email using the Gmail API via the send_email tool. Do not just draft.",
+        goal="For meeting-related intents (schedule, reschedule, cancel), use the calendar tools to search, create, update, or cancel events as needed. Then send the reply email using the Gmail API via the send_email tool. Do not just draft.",
         backstory=REPLY_AGENT_PROMPT,
         tools=tools,
         verbose=True,
@@ -55,8 +65,8 @@ def process_email(email_json, creds=None):
         agent=analyzer_agent
     )
     reply_task = Task(
-        description="If the intent is meeting-related (schedule, reschedule, cancel), send the reply email using the send_email tool.",
-        expected_output="Reply email sent confirmation. Always end with Fraya - Jamahl's AI Executive Assistant. Always refer to the participants by their names, do not make them up or guess.",
+        description="If the intent is meeting-related (schedule, reschedule, cancel), use the appropriate calendar tool to manage the event (search, create, update, cancel), then send the reply email using the send_email tool.",
+        expected_output="Calendar event action confirmation and reply email sent confirmation. Always end with Fraya - Jamahl's AI Executive Assistant. Always refer to the participants by their names, do not make them up or guess.",
         agent=reply_agent
     )
     # Create the crew
