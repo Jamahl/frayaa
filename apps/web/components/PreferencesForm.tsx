@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from "react";
-import { Cog6ToothIcon, ClockIcon, CalendarDaysIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline';
+
 
 type Day = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
 

@@ -1,0 +1,60 @@
+/* tabs.css - Semantic, accessible, modern styles for Tabs */
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.tabs-list {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-muted, #f3f4f6);
+  color: var(--color-muted-foreground, #888);
+  border-radius: 0.5rem;
+  padding: 3px;
+  min-height: 2.25rem;
+  width: fit-content;
+}
+
+.tabs-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  background: none;
+  color: var(--color-foreground, #222);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.98rem;
+  font-weight: 500;
+  transition: color 0.12s, box-shadow 0.12s, background 0.12s;
+  cursor: pointer;
+  min-height: calc(2.25rem - 1px);
+  white-space: nowrap;
+  outline: none;
+}
+.tabs-trigger[aria-selected="true"],
+.tabs-trigger[data-state="active"] {
+  background: var(--color-background, #fff);
+  color: var(--color-accent, #6366f1);
+  box-shadow: 0 1px 4px rgba(99,102,241,0.06);
+  border-color: var(--color-border, #e5e7eb);
+}
+.tabs-trigger:focus-visible {
+  border-color: var(--color-accent, #6366f1);
+  box-shadow: 0 0 0 2px var(--color-accent, #6366f1, 0.2);
+}
+.tabs-trigger:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.tabs-content {
+  flex: 1;
+  outline: none;
+  padding: 0.75rem 0 0 0;
+}

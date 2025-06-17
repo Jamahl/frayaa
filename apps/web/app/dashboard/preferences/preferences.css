@@ -1,0 +1,122 @@
+:root {
+  --color-bg: #f8fafc;
+  --color-bg-card: #fff;
+  --color-primary: #a78bfa;
+  --color-primary-dark: #7c3aed;
+  --color-text: #1e293b;
+  --color-muted: #64748b;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+  --radius-lg: 1.25rem;
+  --radius-md: 0.75rem;
+  --shadow-lg: 0 4px 24px rgba(16, 30, 54, 0.08);
+  --shadow-md: 0 1.5px 8px rgba(16, 30, 54, 0.07);
+}
+
+.preferences-root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff 0%, #e0e7ff 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 48px 16px 32px;
+}
+
+.preferences-card {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 2rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.preferences-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.preferences-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.preferences-desc {
+  color: var(--color-muted);
+  font-size: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.preferences-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.preferences-form label {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.preferences-form input,
+.preferences-form select,
+.preferences-form textarea {
+  border: 1px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  color: var(--color-text);
+  background: #f9fafb;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.preferences-form input:focus,
+.preferences-form select:focus,
+.preferences-form textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.preferences-form .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.preferences-form .btn-save {
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 0.7rem 1.8rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: background 0.18s;
+}
+
+.preferences-form .btn-save:hover {
+  background: var(--color-primary-dark);
+}
+
+.preferences-form .status-message {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.preferences-form .status-message.error {
+  color: var(--color-danger);
+}
+
+.preferences-form .status-message.success {
+  color: var(--color-success);
+}

@@ -1,0 +1,33 @@
+/* Alert base styles */
+.alert {
+  width: 100%;
+  position: relative;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  display: grid;
+  grid-template-columns: 0 1fr;
+  gap: 0.4rem 0.75rem;
+  align-items: start;
+  background: #fff;
+  color: #222;
+}
+.alert--destructive {
+  background: #fff0f0;
+  color: #d92d20;
+  border-color: #d92d20;
+}
+
+.alert-title {
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.2;
+  margin-bottom: 0.1em;
+}
+
+.alert-description {
+  color: #666;
+  font-size: 0.95rem;
+  margin-top: 0.25em;
+}

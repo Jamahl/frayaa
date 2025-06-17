@@ -1,0 +1,74 @@
+/* sonner.css - Semantic, accessible styles for Toaster (Sonner) */
+
+.toaster {
+  /* Container styles */
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toaster .toaster-toast {
+  background: var(--normal-bg, #fff);
+  color: var(--normal-text, #222);
+  border: 1px solid var(--normal-border, #e5e7eb);
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+  padding: 0.875rem 1.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 260px;
+  max-width: 360px;
+  pointer-events: auto;
+  transition: background 0.18s, color 0.18s, border 0.18s;
+}
+
+.toaster .toaster-toast[data-state="open"] {
+  animation: toaster-slide-in 0.23s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes toaster-slide-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.toaster .toaster-toast[data-state="closed"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toaster .toaster-toast--success {
+  border-left: 4px solid #22c55e;
+}
+.toaster .toaster-toast--error {
+  border-left: 4px solid #ef4444;
+}
+.toaster .toaster-toast--warning {
+  border-left: 4px solid #f59e42;
+}
+.toaster .toaster-toast--info {
+  border-left: 4px solid #3b82f6;
+}
+
+.toaster .toaster-toast .toaster-toast-title {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.toaster .toaster-toast .toaster-toast-close {
+  background: none;
+  border: none;
+  color: var(--normal-text, #222);
+  opacity: 0.65;
+  cursor: pointer;
+  font-size: 1.1em;
+  margin-left: auto;
+  transition: opacity 0.12s;
+}
+.toaster .toaster-toast .toaster-toast-close:hover,
+.toaster .toaster-toast .toaster-toast-close:focus {
+  opacity: 1;
+  outline: 2px solid var(--color-accent, #6366f1);
+  outline-offset: 2px;
+}

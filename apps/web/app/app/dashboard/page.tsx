@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
+
 export default function DashboardPage() {
   const { user, signOut, loading } = useAuth()
   const router = useRouter()
@@ -80,7 +81,7 @@ export default function DashboardPage() {
               <CardContent>
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                   <p className="text-sm text-blue-800">
-                    <strong>Authentication Complete!</strong> You've successfully connected your Google account. 
+                    <strong>Authentication Complete!</strong> You&apos;ve successfully connected your Google account. 
                     The next steps will include setting up Gmail monitoring and calendar management.
                   </p>
                 </div>

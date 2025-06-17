@@ -1,0 +1,36 @@
+/* Base badge styling */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  line-height: 1.2;
+  gap: 0.4em;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+
+.badge--default {
+  background: #0561ff;
+  color: #fff;
+}
+
+.badge--secondary {
+  background: #f2f2f2;
+  color: #111;
+}
+
+.badge--destructive {
+  background: #e02b2b;
+  color: #fff;
+}
+
+.badge--outline {
+  background: transparent;
+  color: #0561ff;
+  border-color: #0561ff;
+}

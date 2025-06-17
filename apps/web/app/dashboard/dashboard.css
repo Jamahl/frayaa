@@ -1,0 +1,86 @@
+:root {
+  --color-bg: #f8fafc;
+  --color-card: #fff;
+  --color-accent: #a78bfa;
+  --color-title: #0a0a0a;
+  --color-subtle: #64748b;
+  --radius: 1.5rem;
+  --shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+.dashboard-root {
+  min-height: 100vh;
+  background: var(--color-bg);
+  font-family: 'Inter', 'San Francisco', Arial, sans-serif;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 3vw 1rem 3vw;
+  background: var(--color-card);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dashboard-logo {
+  max-width: 120px;
+  height: auto;
+}
+
+.dashboard-subtitle {
+  color: var(--color-subtle);
+  font-size: 1.1rem;
+  margin-left: 1rem;
+}
+
+.dashboard-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 3vw;
+}
+
+.dashboard-welcome {
+  margin-bottom: 2.5rem;
+}
+
+.dashboard-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 700px) {
+  .dashboard-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.dashboard-card {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+.dashboard-card:hover {
+  box-shadow: 0 4px 32px rgba(80,80,120,0.12);
+}
+
+.dashboard-card-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-title);
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-card-desc {
+  font-size: 1rem;
+  color: var(--color-subtle);
+  margin-bottom: 1.2rem;
+}

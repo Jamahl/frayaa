@@ -1,0 +1,43 @@
+/* tooltip.css - Modern, accessible, semantic styles for Tooltip component */
+
+.tooltip-content {
+  background: var(--tooltip-bg, #222);
+  color: var(--tooltip-fg, #fff);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.93rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  z-index: 50;
+  min-width: 2.5rem;
+  max-width: 20rem;
+  text-align: center;
+  animation: tooltip-fade-in 0.18s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes tooltip-fade-in {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.tooltip-content[data-state="closed"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tooltip-arrow {
+  width: 0.7em;
+  height: 0.7em;
+  background: var(--tooltip-bg, #222);
+  transform: rotate(45deg);
+  position: absolute;
+  z-index: 51;
+}
+
+/* Responsive and accessibility improvements */
+@media (max-width: 600px) {
+  .tooltip-content {
+    font-size: 0.98rem;
+    padding: 0.7rem 1.1rem;
+    max-width: 95vw;
+  }
+}

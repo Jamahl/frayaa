@@ -1,0 +1,19 @@
+/* progress.css - Semantic, accessible styles for Progress */
+
+.progress {
+  background: var(--color-primary-bg, #e0e7ff);
+  position: relative;
+  height: 0.5rem;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.progress-indicator {
+  background: var(--color-primary, #6366f1);
+  height: 100%;
+  width: 100%;
+  flex: 1 1 auto;
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+  border-radius: 999px;
+}

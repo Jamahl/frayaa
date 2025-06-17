@@ -12,7 +12,7 @@ interface AuthContextType {
   signOut: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // Store Google OAuth tokens in Supabase users table if present
           if (session.provider_refresh_token || session.provider_token) {
             try {
-              const updateFields: Record<string, any> = {};
+              const updateFields: Record<string, string | Date> = {};
               if (session.provider_refresh_token) {
                 updateFields.google_refresh_token = session.provider_refresh_token;
               }

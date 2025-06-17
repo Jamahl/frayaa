@@ -1,0 +1,26 @@
+/* base button styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+/* variants */
+.button--default      { background: #0561ff; color: #fff; }
+.button--destructive  { background: #e02b2b; color: #fff; }
+.button--outline      { background: transparent; border: 1px solid #ccc; }
+.button--secondary    { background: #f2f2f2; color: #111; }
+.button--ghost        { background: transparent; }
+.button--link         { background: transparent; color: #0561ff; text-decoration: underline; }
+
+/* sizes */
+.button--size-sm      { padding: 0.25rem 0.75rem; font-size: 0.75rem; }
+.button--size-default { padding: 0.5rem 1rem; }
+.button--size-lg      { padding: 0.6rem 1.5rem; }
+.button--size-icon    { width: 2.25rem; height: 2.25rem; padding: 0; }
